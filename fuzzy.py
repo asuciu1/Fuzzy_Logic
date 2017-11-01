@@ -1,11 +1,11 @@
 from __future__ import division
 import re, sys
-from parse import *
+from func import *
 from collections import OrderedDict
 
 
 ###VARIABLES###
-f 					= open("example3.txt", "r")
+f 					= open("example2.txt", "r")
 myList 			= []
 spaces 			= []
 fuz 				= OrderedDict()
@@ -16,18 +16,6 @@ regexp 			= re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))')
 regexpbreap = re.compile(r'')
 ###############
 
-###FUNCTIONS###
-def strip(String):
-	return String.replace("the ", "") 	\
-							 .replace("is ", "") 		\
-							 .replace("\n", "") 		\
-							 .replace("\r", "") 		\
-							 .replace("will ", "") 	\
-							 .replace("be ", "")
-
-def float3(String):
-	return round(float(String),3)
-###############
 
 ###parse the file in a list
 for line in f:
@@ -39,10 +27,7 @@ for i in range(len(myList)):
 		spaces.append(i)
 
 ###parse the rules from tile to dictionary
-for i in range(spaces[0]+1, spaces[1]):
-	r = parse("{rule} If {variable1} {value1} {logicalconn} {variable2} {value2} then {action} {actionval}" \
-			, strip(myList[i]))
-	rules[r["rule"]] = r
+rules = parse(myList, spaces[0], spaces[1])
 
 ###inputs from the end of the file
 for i in range(spaces[len(spaces)-1]+1, len(myList)):
@@ -56,6 +41,7 @@ for i in range(len(myList)):
 			if j in spaces:
 				break
 			fuz2[myList[j].split(' ', 1)[0]] = filter(None,re.split(r'\s', myList[j].split(' ', 1)[1]))
+
 		fuz[strip(myList[i].split('\n',1)[0]).replace(' ','')] = fuz2
 		fuz2 = OrderedDict()
 

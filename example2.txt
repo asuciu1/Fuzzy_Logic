@@ -1,9 +1,9 @@
 ovenRulebase
 
-Rule 1 If temperature is high or current is high then reduce current
-Rule 2 If temperature is medium then no_change to current
-Rule 3 If temperature is low and current is high then no_change to current
-Rule 4 If temperature is low and current is low then increase current
+Rule 1 If temperature is high or current is high then current is reduce
+Rule 2 If temperature is medium then current is no_change
+Rule 3 If temperature is low and current is high then current is no_change
+Rule 4 If temperature is low and current is low then current is increase
 
 current
 

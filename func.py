@@ -11,6 +11,7 @@ action 	= OrderedDict()
 #########################################
 def float3(String):
 	return round(float(String),3)
+	#return float(String)
 
 def strip(String):
 	return String.replace("the ", "") 	\
@@ -66,8 +67,30 @@ def parse(List,start,stop):
 		rules[	re.split(r'\s', strip(List[i]))[0] 	\
 					+ " "																	\
 					+ re.split(r'\s', strip(List[i]))[1]	\
-				 ] = {"Variables": getVars		(re.split(r'\s', strip(List[i]))) ,\
+				 ] = {"Variables"	: getVars		(re.split(r'\s', strip(List[i]))) ,\
 				 			"and|or"		: getLog		(re.split(r'\s', strip(List[i]))) ,\
-				 			"Actions"	: getAction	(re.split(r'\s', strip(List[i])))	\
+				 			"Actions"		: getAction	(re.split(r'\s', strip(List[i])))	 \
 				 		 }
 	return rules
+
+def getMin(List):
+	min = List[0]
+	for i in List:
+		if i < min:
+			min = i
+	return min
+def getMax(List):
+	max = List[0]
+	for i in List:
+		if i > max:
+			max = i
+	return max
+
+def applyMinMax(operator, List):
+	if not operator:
+		return getMin(List)
+	elif operator[0] == 'or' or operator[0] == 'OR':
+		return getMax(List)
+	elif operator[0] == 'and' or operator[0] == 'AND':
+		return getMin(List)
+

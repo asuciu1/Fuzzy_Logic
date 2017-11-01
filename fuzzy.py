@@ -3,15 +3,27 @@ from parse import *
 from collections import OrderedDict
 
 ###VARIABLES###
-f 					= open("example.txt", "r")
+f 					= open("example3.txt", "r")
 myList 			= []
 spaces 			= []
-dic 				= OrderedDict()
-dic2 				= OrderedDict()
+fuz 				= OrderedDict()
+fuz2 				= OrderedDict()
+rules				= OrderedDict()
 inputs 			= {}
 regexp 			= re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))')
 regexpbreap = re.compile(r'')
 ###############
+
+###FUNCTIONS###
+def strip(String):
+	return String.replace("the ", "") 	\
+							 .replace("is ", "") 		\
+							 .replace("\n", "") 		\
+							 .replace("\r", "") 		\
+							 .replace("will ", "") 	\
+							 .replace("be ", "")		\
+###############
+
 
 for line in f:
   myList.append(line)
@@ -21,13 +33,17 @@ for line in f:
 for i in range(len(myList)):
 	if myList[i] == "\n" or myList[i] == "\r\n":
 		spaces.append(i)
-  #print myList[i].replace("the ", "").replace("is ", "").replace("\n", "")
-#r = parse("{variable}",myList[spaces[2]-1])
+
+###parse the rules from tile to dictionary
+for i in range(spaces[0]+1, spaces[1]):
+	r = parse("{rule} If {variable1} {value1} {logicalconn} {variable2} {value2} then {action} {actionval}" \
+			, strip(myList[i]))
+	rules[r["rule"]] = r
 
 ###inputs from the end of the file
 for i in range(spaces[len(spaces)-1]+1, len(myList)):
 	inputs[re.split(r'\s.\s',myList[i])[0]] 	\
-		= re.split(r'\s.\s',myList[i])[1].replace('\r','').replace('\n','').replace(' ','')
+		= strip(re.split(r'\s.\s',myList[i])[1]).replace(' ','')
 
 ###get the variables from the file
 for i in range(len(myList)):
@@ -35,10 +51,17 @@ for i in range(len(myList)):
 		for j in range(i+2,len(myList)):
 			if j in spaces:
 				break
-			dic2[myList[j].split(' ', 1)[0]] = filter(None,re.split(r'\s', myList[j].split(' ', 1)[1]))
-		dic[myList[i].split('\n',1)[0].replace('\r','').replace('\n','').replace(' ','')] = dic2
-		dic2 = {}
+			fuz2[myList[j].split(' ', 1)[0]] = filter(None,re.split(r'\s', myList[j].split(' ', 1)[1]))
+		fuz[strip(myList[i].split('\n',1)[0]).replace(' ','')] = fuz2
+		fuz2 = OrderedDict()
+"""
+for keys in inputs.keys():
+	print keys + "=" + inputs[keys]
+	print fuz[keys]
+"""
 
-print dic["driving"]["average"][2]
-#print inputs
+
+print fuz
+print inputs
+print rules
 #[1, 6, 8, 12, 14, 18, 20, 24]

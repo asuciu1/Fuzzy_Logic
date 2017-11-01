@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-f = open("example.txt", "r")
-myList = []
-
-
-
-for line in f:
-  myList.append(line)
-
-#exec(myList[0] "= 'something'")
-
-for i in range(len(myList)):
-  print myList[i].replace("the ", "").replace("is ", "").replace("\n", "")
-
-print myList[0]
-print myList[2]
-
-#print(myList)
-=======
 import re, sys
 from parse import *
 from collections import OrderedDict
@@ -61,4 +42,3 @@ for i in range(len(myList)):
 print dic["driving"]["average"][2]
 #print inputs
 #[1, 6, 8, 12, 14, 18, 20, 24]
->>>>>>> read file w out rules

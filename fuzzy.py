@@ -1,6 +1,8 @@
+from __future__ import division
 import re, sys
 from parse import *
 from collections import OrderedDict
+
 
 ###VARIABLES###
 f 					= open("example3.txt", "r")
@@ -21,15 +23,17 @@ def strip(String):
 							 .replace("\n", "") 		\
 							 .replace("\r", "") 		\
 							 .replace("will ", "") 	\
-							 .replace("be ", "")		\
+							 .replace("be ", "")
+
+def float3(String):
+	return round(float(String),3)
 ###############
 
-
+###parse the file in a list
 for line in f:
   myList.append(line)
 
-#exec(myList[0] "= 'something'")
-
+###store the empty rows in file
 for i in range(len(myList)):
 	if myList[i] == "\n" or myList[i] == "\r\n":
 		spaces.append(i)
@@ -54,14 +58,46 @@ for i in range(len(myList)):
 			fuz2[myList[j].split(' ', 1)[0]] = filter(None,re.split(r'\s', myList[j].split(' ', 1)[1]))
 		fuz[strip(myList[i].split('\n',1)[0]).replace(' ','')] = fuz2
 		fuz2 = OrderedDict()
-"""
-for keys in inputs.keys():
-	print keys + "=" + inputs[keys]
-	print fuz[keys]
-"""
+
+###fuzzifier
+for k_i in inputs.keys():
+	print k_i + "=" + inputs[k_i]
+	for k_j in fuz[k_i].keys():
+		#print k_j 
+		#print fuz[k_i][k_j]
+		
+		#outside
+		if float3(inputs[k_i]) < float3(fuz[k_i][k_j][0]) - float3(fuz[k_i][k_j][2]):
+			print "u("+ k_j +") = 0"
+		elif float3(inputs[k_i]) > float3(fuz[k_i][k_j][1]) + float3(fuz[k_i][k_j][3]):
+			print "u("+ k_j +") = 0"
+		#inside
+		elif float3(inputs[k_i]) < float3(fuz[k_i][k_j][1]) + float3(fuz[k_i][k_j][3]) \
+				and float3(inputs[k_i]) > float3(fuz[k_i][k_j][0]) - float3(fuz[k_i][k_j][2]):
+			if float3(inputs[k_i]) >= float3(fuz[k_i][k_j][0]) and float3(inputs[k_i]) <= float3(fuz[k_i][k_j][1]):
+				print "u("+ k_j +") = 1"
+			#alpha
+			elif float3(inputs[k_i]) < float3(fuz[k_i][k_j][0]) \
+					and float3(inputs[k_i]) > float3(fuz[k_i][k_j][0]) - float3(fuz[k_i][k_j][2]):
+				value = (float3(inputs[k_i]) 			\
+							- float3(fuz[k_i][k_j][0]) 	\
+							+ float3(fuz[k_i][k_j][2]))	\
+							/ float3(fuz[k_i][k_j][2])
+				#print "(" + fuz[k_i][k_j][0] + "+" + fuz[k_i][k_j][2] + "-" + inputs[k_i] + ")/"+ fuz[k_i][k_j][2] + "=" + str(value)
+				print "u("+ k_j +") = " + str(float3(value))
+			#beta
+			elif float3(inputs[k_i]) > float3(fuz[k_i][k_j][1]) \
+					and float3(inputs[k_i]) < float3(fuz[k_i][k_j][1]) + float3(fuz[k_i][k_j][3]):
+				value = ((float3(fuz[k_i][k_j][1]) \
+							+ float3(fuz[k_i][k_j][3])) 	\
+							- float3(inputs[k_i]))				\
+							/ float3(fuz[k_i][k_j][3])
+				#print "(" + fuz[k_i][k_j][1] + "+" + fuz[k_i][k_j][3] + "-" + inputs[k_i] + ")/"+ fuz[k_i][k_j][3] + "=" + str(value)
+				print "u("+ k_j +") = " + str(float3(value))
 
 
-print fuz
-print inputs
-print rules
+
+#print fuz
+#print inputs
+#print rules
 #[1, 6, 8, 12, 14, 18, 20, 24]

@@ -66,8 +66,8 @@ def parse(List,start,stop):
 		rules[	re.split(r'\s', strip(List[i]))[0] 	\
 					+ " "																	\
 					+ re.split(r'\s', strip(List[i]))[1]	\
-				 ] = (("Variables", getVars		(re.split(r'\s', strip(List[i])))) ,\
-				 			("and|or"		, getLog		(re.split(r'\s', strip(List[i])))) ,\
-				 			("Actions"	, getAction	(re.split(r'\s', strip(List[i]))))	\
-				 		 )
+				 ] = {"Variables": getVars		(re.split(r'\s', strip(List[i]))) ,\
+				 			"and|or"		: getLog		(re.split(r'\s', strip(List[i]))) ,\
+				 			"Actions"	: getAction	(re.split(r'\s', strip(List[i])))	\
+				 		 }
 	return rules

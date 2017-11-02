@@ -1,0 +1,5 @@
+#Ignore compiled files
+*.pyc
+
+#Ignore cache created by python 3
+__pycache__/

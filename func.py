@@ -7,11 +7,25 @@ rules		= OrderedDict()
 log			= []
 var 		= OrderedDict()
 action 	= OrderedDict()
+myList	= []
+spaces 	= []
 
 #########################################
 def float3(String):
 	return round(float(String),3)
 	#return float(String)
+
+def loadFile(String):
+	f = open(String, "r")
+	for line in f:
+		myList.append(line)
+	return myList
+
+def eSpaces(List):
+	for i in range(len(List)):
+		if myList[i] == "\n" or myList[i] == "\r\n":
+			spaces.append(i)
+	return spaces
 
 def strip(String):
 	return String.replace("the ", "") 	\

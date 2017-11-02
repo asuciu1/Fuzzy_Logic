@@ -5,7 +5,7 @@ from collections import OrderedDict, Counter
 
 
 ###VARIABLES###
-f 						= open("example4.txt", "r")
+
 myList 				= []
 spaces 				= []
 st 						= []
@@ -31,13 +31,10 @@ regexpbreap 	= re.compile(r'')
 ### vvv mess starts here -- clean up vvv ##
 
 ###parse the file in a list
-for line in f:
-  myList.append(line)
+myList = loadFile("example.txt")
 
 ###store the empty rows in file
-for i in range(len(myList)):
-	if myList[i] == "\n" or myList[i] == "\r\n":
-		spaces.append(i)
+spaces = eSpaces(myList)
 
 ###parse the rules from tile to dictionary
 rules = parse(myList, spaces[0], spaces[1])
@@ -58,19 +55,19 @@ for i in range(len(myList)):
 		fuz2 = OrderedDict()
 
 ###fuzzifier
-print "###Fuzzification###"
+print( "###Fuzzification###")
 for k_i in inputs.keys():
-	print "\n" + k_i + " = " + str(inputs[k_i])
+	print("\n" + k_i + " = " + str(inputs[k_i]))
 	for k_j in fuz[k_i].keys():
 		#outside
 		if inputs[k_i] < fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
-			print " u("+ k_j +") = 0"
+			print(" u("+ k_j +") = 0")
 			if k_i in fuzzyset:
 				fuzzyset[k_i][k_j] = 0
 			else:
 				fuzzyset[k_i] = {k_j: 0}
 		elif inputs[k_i] > fuz[k_i][k_j][1] + fuz[k_i][k_j][3]:
-			print " u("+ k_j +") = 0"
+			print(" u("+ k_j +") = 0")
 			if k_i in fuzzyset:
 				fuzzyset[k_i] = {k_j: 0}
 			else:
@@ -79,7 +76,7 @@ for k_i in inputs.keys():
 		elif inputs[k_i] < fuz[k_i][k_j][1] + fuz[k_i][k_j][3] \
 				and inputs[k_i] > fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
 			if inputs[k_i] >= fuz[k_i][k_j][0] and inputs[k_i] <= fuz[k_i][k_j][1]:
-				print " u("+ k_j +") = 1"
+				print(" u("+ k_j +") = 1")
 				if k_i in fuzzyset:
 					fuzzyset[k_i][k_j] = 1
 				else:
@@ -91,7 +88,7 @@ for k_i in inputs.keys():
 							- fuz[k_i][k_j][0] 	\
 							+ fuz[k_i][k_j][2])	\
 							/ fuz[k_i][k_j][2]
-				print " u("+ k_j +") = " + str(float3(value))
+				print(" u("+ k_j +") = " + str(float3(value)))
 				if k_i in fuzzyset:
 					fuzzyset[k_i][k_j] = float3(value)
 				else:
@@ -103,22 +100,21 @@ for k_i in inputs.keys():
 							+ fuz[k_i][k_j][3]		\
 							- inputs[k_i])				\
 							/ fuz[k_i][k_j][3]
-				print " u("+ k_j +") = " + str(float3(value))
+				print(" u("+ k_j +") = " + str(float3(value)))
 				if k_i in fuzzyset:
 					fuzzyset[k_i][k_j] = float3(value)
 				else:
 					fuzzyset[k_i] = {k_j: float3(value)}
 
 
-print 
-print "Firing of the rules:"
+print(" ")
+print("Firing of the rules:")
 for k in rules.keys():
 	for g in range(len(rules[k]['Variables'].keys())):
-		st.append(fuzzyset[rules[k]['Variables'].keys()[g]][rules[k]['Variables'][rules[k]['Variables'].keys()[g]]])
-	#print rules[k]['and|or']
+		st.append(fuzzyset[list(rules[k]['Variables'].keys())[g]][rules[k]['Variables'][list(rules[k]['Variables'].keys())[g]]])
 	minmax = applyMinMax(rules[k]['and|or'],st)
-	print " " + k +": " + rules[k]['Actions'][rules[k]['Actions'].keys()[0]] + " = " + str(minmax)
-	rulesContr[k] = (rules[k]['Actions'][rules[k]['Actions'].keys()[0]], minmax) 
+	print(" " + k +": " + rules[k]['Actions'][list(rules[k]['Actions'].keys())[0]] + " = " + str(minmax))
+	rulesContr[k] = (rules[k]['Actions'][list(rules[k]['Actions'].keys())[0]], minmax)
 	st = []
 
 duplicateRules = Counter([rulesContr[i][0] for i in rulesContr.keys()])
@@ -127,10 +123,10 @@ for i in duplicateRules.keys():
 		a.append(i)
 
 if a:
-	print "\nCombine contributions from rules using the OR relation:"
+	print("\nCombine contributions from rules using the OR relation:")
 	for i in rulesContr.keys():
 		if rulesContr[i][0] not in a:
-			print rulesContr[i][0] +" = "+ str(rulesContr[i][1])
+			print(rulesContr[i][0] +" = "+ str(rulesContr[i][1]))
 			combinedRules[rulesContr[i][0]] = rulesContr[i][1]
 		elif rulesContr[i][0] not in checked:
 			checked.append(rulesContr[i][0])
@@ -139,16 +135,16 @@ if a:
 					orVars = rulesContr[i][0]
 					orValues.append(rulesContr[j][1])
 			combinedRules[orVars]  =  getMax(orValues)
-	print orVars + " = " + str(getMax(orValues))
+	print(orVars + " = " + str(getMax(orValues)))
 else:
 	for i in rulesContr.keys():
 		combinedRules[rulesContr[i][0]] = rulesContr[i][1]
-	#print combinedRules
-print
-#print fuz["change_in_current"]
+	#print( combinedRules
+print(" ")
+#print( fuz["change_in_current"]
 action = strip(myList[spaces[-3]+1]).replace(' ','')
-print "\n###Defuzzification###\n"
-print "Area"
+print("\n###Defuzzification###\n")
+print("Area")
 for i in fuz[action].keys():
 	if combinedRules[i] == 0:
 		continue
@@ -158,7 +154,7 @@ for i in fuz[action].keys():
 					- fuz[action][i][0]  	\
 					+ fuz[action][i][2]  	\
 					+ fuz[action][i][3]))
-		
+
 		length = float3(
 					 (fuz[action][i][1]  	\
 					- fuz[action][i][0] 	\
@@ -166,34 +162,34 @@ for i in fuz[action].keys():
 					+ fuz[action][i][3]) 	\
 					* (1.0 - combinedRules[i]))
 		height = combinedRules[i]
-		
-		print " " + i + " area is " + str(float3(((Length+length)*height)/2))
-		areas[i] = float3(((Length+length)*height)/2)
-print 
 
-print "Centres are:"
+		print(" " + i + " area is " + str(float3(((Length+length)*height)/2)))
+		areas[i] = float3(((Length+length)*height)/2)
+print(" ")
+
+print("Centres are:")
 previous = 0
 counter = 0
 
 for i in fuz[action].keys():
 	if combinedRules[i] == 0:
-		if counter == 0:	
+		if counter == 0:
 			start = fuz[action][i][0] - fuz[action][i][2]
 			counter = 1
 		continue
 	else:
-		if counter == 0: 
+		if counter == 0:
 			start = fuz[action][i][0] - fuz[action][i][2]
 			counter = 1
 		centre = abs((fuz[action][i][0] + fuz[action][i][1])/2 - start)
 		previous = centre
-		print " " + i +" centre is "+ str(centre)
+		print( " " + i +" centre is "+ str(centre))
 		centres[i] = centre
 
 
 for i in areas.keys():
 	AiXi += areas[i]*centres[i]
 	Ai 	 += areas[i]
-print  
-print "The defuzzified value is "+ str(AiXi/Ai) + " from the lhs"
-#print fuz[action]
+
+print("The defuzzified value is "+ str(AiXi/Ai) + " from the lhs")
+#print( fuz[action]

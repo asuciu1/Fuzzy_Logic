@@ -2,10 +2,10 @@ import re, sys
 from collections import OrderedDict
 
 
-f 			= open("example2.txt", "r")
-rules		= OrderedDict()
-log			= []
-var 		= OrderedDict()
+f 		= open("example2.txt", "r")
+rules	= OrderedDict()
+log		= []
+var 	= OrderedDict()
 action 	= OrderedDict()
 myList	= []
 spaces 	= []
@@ -22,19 +22,19 @@ def loadFile(String):
 	return myList
 
 def eSpaces(List):
-	for i in range(len(List)):
-		if myList[i] == "\n" or myList[i] == "\r\n":
-			spaces.append(i)
-	return spaces
+    for i in range(len(List)):
+        if myList[i] == "\n" or myList[i] == "\r\n":
+            spaces.append(i)
+    return spaces
 
 def strip(String):
-	return String.replace("the ", "") 	\
-							 .replace("is ", "") 		\
-							 .replace("\n", "") 		\
-							 .replace("\r", "") 		\
-							 .replace("will ", "") 	\
-							 .replace("to ", "")		\
-							 .replace("be ", "")
+	return String.replace("the ", "")   \
+             .replace("is ", "") 		\
+             .replace("\n", "") 		\
+             .replace("\r", "") 		\
+             .replace("will ", "") 	     \
+             .replace("to ", "")		\
+             .replace("be ", "")
 
 def getVars(List):
 	var = OrderedDict()

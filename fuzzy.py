@@ -6,25 +6,25 @@ from collections import OrderedDict, Counter
 
 ###VARIABLES###
 
-myList 			= [] #list of the text contained in the example file
-spaces 			= [] #list of the location of empty spaces in the file
-st				= [] #used to store temporary values for parsing from rules in order to apply min/max
-a				= [] #list of duplicate rules for combining contributions
-checked  		= [] #used to store a list of already checked values
-orValues 		= [] #used to identify the values when rules are fired
-orVars	 		= [] #used to identify the operator when rules are fired. this is important for deciding between min/max
-fuzzyset		= {} #stores the Mu values after fuzzification
-inputs 			= {} #values at the end of file key<--name, value<--numeric_value
-rulesContr		= {} #stores the values after 'Firing of the rules' section in a machine readable way. enables combining duplicate rules by using OR in the next step 
-combinedRules	= {} #combined rulesContr values into a combined dictionary
-areas			= {} #list of areas
-centres			= {} #list of centres --> same order as areas
-AiXi 			= float() #area * centre
-Ai 	 			= float() #area
-fuz 			= OrderedDict() #contains the parsed values from the file(ie. fuzzy categories and the 4tuples)
-fuz2 			= OrderedDict() #used to create the fuz dictionary
-rules			= OrderedDict() #parsed rules from the file in a machine readable format
-regexp 			= re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))') #used to identify the variables and their values (ie. temperature)
+myList          = [] #list of the text contained in the example file
+spaces          = [] #list of the location of empty spaces in the file
+st              = [] #used to store temporary values for parsing from rules in order to apply min/max
+a               = [] #list of duplicate rules for combining contributions
+checked         = [] #used to store a list of already checked values
+orValues        = [] #used to identify the values when rules are fired
+orVars          = [] #used to identify the operator when rules are fired. this is important for deciding between min/max
+fuzzyset        = {} #stores the Mu values after fuzzification
+inputs          = {} #values at the end of file key<--name, value<--numeric_value
+rulesContr      = {} #stores the values after 'Firing of the rules' section in a machine readable way. enables combining duplicate rules by using OR in the next step 
+combinedRules   = {} #combined rulesContr values into a combined dictionary
+areas           = {} #list of areas
+centres         = {} #list of centres --> same order as areas
+AiXi            = float() #area * centre
+Ai              = float() #area
+fuz             = OrderedDict() #contains the parsed values from the file(ie. fuzzy categories and the 4tuples)
+fuz2            = OrderedDict() #used to create the fuz dictionary
+rules           = OrderedDict() #parsed rules from the file in a machine readable format
+regexp          = re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))') #used to identify the variables and their values (ie. temperature)
 ###############
 
 ### vvv mess starts here -- clean up vvv ##
@@ -148,18 +148,18 @@ for i in fuz[action].keys():
 	if combinedRules[i] == 0:
 		continue
 	else:
-		Length = float3((fuz[action][i][1]  \
-			   - fuz[action][i][0]  		\
-			   + fuz[action][i][2]  		\
-			   + fuz[action][i][3]))
+        Length = float3((fuz[action][i][1]  \
+               - fuz[action][i][0]  		\
+               + fuz[action][i][2]  		\
+               + fuz[action][i][3]))
 
-		length = float3((fuz[action][i][1] 	\
-			   - fuz[action][i][0] 			\
-			   + fuz[action][i][2] 			\
-			   + fuz[action][i][3])			\
-			   * (1.0 - combinedRules[i]))
+        length = float3((fuz[action][i][1] 	\
+               - fuz[action][i][0] 			\
+               + fuz[action][i][2] 			\
+               + fuz[action][i][3])			\
+               * (1.0 - combinedRules[i]))
 		
-		height = combinedRules[i]
+        height = combinedRules[i]
 
 
 		print(" " + i + " area is " + str(float3(((Length+length)*height)/2)))
@@ -178,9 +178,9 @@ for i in fuz[action].keys():
 		continue
 	else:
 		if counter == 0:
-			start 	= fuz[action][i][0] - fuz[action][i][2]
+			start   = fuz[action][i][0] - fuz[action][i][2]
 			counter = 1
-		centre 	 = abs((fuz[action][i][0] + fuz[action][i][1])/2 - start)
+		centre   = abs((fuz[action][i][0] + fuz[action][i][1])/2 - start)
 		previous = centre
 		print( " " + i +" centre is "+ str(centre))
 		centres[i] = centre
@@ -188,7 +188,7 @@ for i in fuz[action].keys():
 
 for i in areas.keys():
 	AiXi += areas[i]*centres[i]
-	Ai 	 += areas[i]
+	Ai   += areas[i]
 
 print("The defuzzified value is "+ str(AiXi/Ai) + " from the lhs")
 #print( fuz[action]

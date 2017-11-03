@@ -8,15 +8,15 @@ from collections import OrderedDict, Counter
 
 myList 			= [] #list of the text contained in the example file
 spaces 			= [] #list of the location of empty spaces in the file
-st 				= [] #used to store temporary values for parsing from rules in order to apply min/max
-a 				= [] #list of duplicate rules for combining contributions
+st				= [] #used to store temporary values for parsing from rules in order to apply min/max
+a				= [] #list of duplicate rules for combining contributions
 checked  		= [] #used to store a list of already checked values
 orValues 		= [] #used to identify the values when rules are fired
 orVars	 		= [] #used to identify the operator when rules are fired. this is important for deciding between min/max
 fuzzyset		= {} #stores the Mu values after fuzzification
 inputs 			= {} #values at the end of file key<--name, value<--numeric_value
 rulesContr		= {} #stores the values after 'Firing of the rules' section in a machine readable way. enables combining duplicate rules by using OR in the next step 
-combinedRules 	= {} #combined rulesContr values into a combined dictionary
+combinedRules	= {} #combined rulesContr values into a combined dictionary
 areas			= {} #list of areas
 centres			= {} #list of centres --> same order as areas
 AiXi 			= float() #area * centre
@@ -25,7 +25,6 @@ fuz 			= OrderedDict() #contains the parsed values from the file(ie. fuzzy categ
 fuz2 			= OrderedDict() #used to create the fuz dictionary
 rules			= OrderedDict() #parsed rules from the file in a machine readable format
 regexp 			= re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))') #used to identify the variables and their values (ie. temperature)
-regexpbreap 	= re.compile(r'')
 ###############
 
 ### vvv mess starts here -- clean up vvv ##

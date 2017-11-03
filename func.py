@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 f       = open("example2.txt", "r")
 rules   = OrderedDict()
-log	    = []
+log     = []
 var     = OrderedDict()
 action 	= OrderedDict()
 myList  = []

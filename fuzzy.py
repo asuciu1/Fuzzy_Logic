@@ -83,9 +83,9 @@ for k_i in inputs.keys():
 			#alpha
 			elif inputs[k_i] < fuz[k_i][k_j][0] \
 			  and inputs[k_i] > fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
-				value = (inputs[k_i] 		\
-					  - fuz[k_i][k_j][0] 	\
-					  + fuz[k_i][k_j][2])	\
+				value = (inputs[k_i]       \
+					  - fuz[k_i][k_j][0]   \
+					  + fuz[k_i][k_j][2])  \
 					  / fuz[k_i][k_j][2]
 				print(" u("+ k_j +") = " + str(float3(value)))
 				if k_i in fuzzyset:
@@ -95,9 +95,9 @@ for k_i in inputs.keys():
 			#beta
 			elif inputs[k_i] > fuz[k_i][k_j][1] \
 			  and inputs[k_i] < fuz[k_i][k_j][1] + fuz[k_i][k_j][3]:
-				value = (fuz[k_i][k_j][1]	\
-					  + fuz[k_i][k_j][3]	\
-					  - inputs[k_i])		\
+				value = (fuz[k_i][k_j][1]  \
+					  + fuz[k_i][k_j][3]   \
+					  - inputs[k_i])       \
 					  / fuz[k_i][k_j][3]
 				print(" u("+ k_j +") = " + str(float3(value)))
 				if k_i in fuzzyset:
@@ -145,25 +145,25 @@ action = strip(myList[spaces[-3]+1]).replace(' ','')
 print("\n###Defuzzification###\n")
 print("Area")
 for i in fuz[action].keys():
-	if combinedRules[i] == 0:
-		continue
-	else:
+    if combinedRules[i] == 0:
+	   continue
+    else:
         Length = float3((fuz[action][i][1]  \
-               - fuz[action][i][0]  		\
-               + fuz[action][i][2]  		\
+               - fuz[action][i][0]          \
+               + fuz[action][i][2]          \
                + fuz[action][i][3]))
 
-        length = float3((fuz[action][i][1] 	\
-               - fuz[action][i][0] 			\
-               + fuz[action][i][2] 			\
-               + fuz[action][i][3])			\
+        length = float3((fuz[action][i][1]  \
+               - fuz[action][i][0]          \
+               + fuz[action][i][2]          \
+               + fuz[action][i][3])         \
                * (1.0 - combinedRules[i]))
 		
         height = combinedRules[i]
 
 
-		print(" " + i + " area is " + str(float3(((Length+length)*height)/2)))
-		areas[i] = float3(((Length+length)*height)/2)
+        print(" " + i + " area is " + str(float3(((Length+length)*height)/2)))
+        areas[i] = float3(((Length+length)*height)/2)
 print(" ")
 
 print("Centres are:")

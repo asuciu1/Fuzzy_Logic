@@ -2,13 +2,13 @@ import re, sys
 from collections import OrderedDict
 
 
-f 		= open("example2.txt", "r")
-rules	= OrderedDict()
-log		= []
-var 	= OrderedDict()
+f       = open("example2.txt", "r")
+rules   = OrderedDict()
+log	    = []
+var     = OrderedDict()
 action 	= OrderedDict()
-myList	= []
-spaces 	= []
+myList  = []
+spaces  = []
 
 #########################################
 def float3(String):
@@ -24,16 +24,16 @@ def loadFile(String):
 def eSpaces(List):
     for i in range(len(List)):
         if myList[i] == "\n" or myList[i] == "\r\n":
-            spaces.append(i)
+        	spaces.append(i)
     return spaces
 
 def strip(String):
 	return String.replace("the ", "")   \
-             .replace("is ", "") 		\
-             .replace("\n", "") 		\
-             .replace("\r", "") 		\
-             .replace("will ", "") 	     \
-             .replace("to ", "")		\
+             .replace("is ", "")        \
+             .replace("\n", "")         \
+             .replace("\r", "")         \
+             .replace("will ", "")      \
+             .replace("to ", "")        \
              .replace("be ", "")
 
 def getVars(List):
@@ -41,17 +41,17 @@ def getVars(List):
 	for i in range(2, len(List)):
 		if List[i] == 'If':
 			pass
-		elif List[i] 	 == 'then'\
+		elif List[i] 	 == 'then' \
 			or List[i+1] == 'then':
 			break
-		elif List[i] 	 == 'and' \
-			or List[i] 	 == 'AND' \
-			or List[i] 	 == 'or' 	\
-			or List[i]	 == 'OR'	\
-			or List[i+1] == 'and' \
-			or List[i+1] == 'AND' \
-			or List[i+1] == 'or' 	\
-			or List[i+1] == 'OR'	:
+		elif List[i] 	 == 'and'\
+			or List[i] 	 == 'AND'\
+			or List[i] 	 == 'or' \
+			or List[i]	 == 'OR' \
+			or List[i+1] == 'and'\
+			or List[i+1] == 'AND'\
+			or List[i+1] == 'or' \
+			or List[i+1] == 'OR' :
 			pass
 		else:
 			var[List[i]] = List[i+1]
@@ -63,8 +63,8 @@ def getLog(List):
 	for i in range(len(List)):
 		if 	 List[i] 	 == 'and' \
 			or List[i] 	 == 'AND' \
-			or List[i] 	 == 'or' 	\
-			or List[i]	 == 'OR'	:
+			or List[i] 	 == 'or'  \
+			or List[i]	 == 'OR'  :
 			log.append(List[i])
 	return log
 
@@ -78,13 +78,13 @@ def getAction(List):
 
 def parse(List,start,stop):
 	for i in range(start+1, stop):
-		rules[	re.split(r'\s', strip(List[i]))[0] 	\
-					+ " "																	\
-					+ re.split(r'\s', strip(List[i]))[1]	\
-				 ] = {"Variables"	: getVars		(re.split(r'\s', strip(List[i]))) ,\
-				 			"and|or"		: getLog		(re.split(r'\s', strip(List[i]))) ,\
-				 			"Actions"		: getAction	(re.split(r'\s', strip(List[i])))	 \
-				 		 }
+		rules[re.split(r'\s', strip(List[i]))[0]     \
+			   + " "                                 \
+			   + re.split(r'\s', strip(List[i]))[1]  \
+			 ] = {"Variables": getVars  (re.split(r'\s', strip(List[i]))) ,\
+				  "and|or"   : getLog   (re.split(r'\s', strip(List[i]))) ,\
+				  "Actions"  : getAction(re.split(r'\s', strip(List[i])))  \
+				 }
 	return rules
 
 def getMin(List):

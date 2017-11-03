@@ -6,25 +6,25 @@ from collections import OrderedDict, Counter
 
 ###VARIABLES###
 
-myList 				= []
-spaces 				= []
-st 						= []
-a 						= []
-checked  			= []
-orValues 			= []
-orVars	 			= []
-combinedRules = {}
-fuzzyset			=	{}
-inputs 				= {}
-rulesContr		= {}
-areas					= {}
-centres				= {}
-AiXi 					= float()
-Ai 	 					= float()
-fuz 					= OrderedDict()
-fuz2 					= OrderedDict()
-rules					= OrderedDict()
-regexp 				= re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))')
+myList 			= [] #list of the text contained in the example file
+spaces 			= [] #list of the location of empty spaces in the file
+st 				= [] #used to store temporary values for parsing from rules in order to apply min/max
+a 				= [] #list of duplicate rules for combining contributions
+checked  		= [] #used to store a list of already checked values
+orValues 		= [] #used to identify the values when rules are fired
+orVars	 		= [] #used to identify the operator when rules are fired. this is important for deciding between min/max
+fuzzyset		= {} #stores the Mu values after fuzzification
+inputs 			= {} #values at the end of file key<--name, value<--numeric_value
+rulesContr		= {} #stores the values after 'Firing of the rules' section in a machine readable way. enables combining duplicate rules by using OR in the next step 
+combinedRules 	= {} #combined rulesContr values into a combined dictionary
+areas			= {} #list of areas
+centres			= {} #list of centres --> same order as areas
+AiXi 			= float() #area * centre
+Ai 	 			= float() #area
+fuz 			= OrderedDict() #contains the parsed values from the file(ie. fuzzy categories and the 4tuples)
+fuz2 			= OrderedDict() #used to create the fuz dictionary
+rules			= OrderedDict() #parsed rules from the file in a machine readable format
+regexp 			= re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))') #used to identify the variables and their values (ie. temperature)
 regexpbreap 	= re.compile(r'')
 ###############
 
@@ -33,15 +33,15 @@ regexpbreap 	= re.compile(r'')
 ###parse the file in a list
 myList = loadFile("example.txt")
 
-###store the empty rows in file
+###store the empty rows locations
 spaces = eSpaces(myList)
 
-###parse the rules from tile to dictionary
+###parse the rules from file to dictionary
 rules = parse(myList, spaces[0], spaces[1])
 
 ###inputs from the end of the file
 for i in range(spaces[len(spaces)-1]+1, len(myList)):
-	inputs[re.split(r'\s.\s',myList[i])[0]] 	\
+	inputs[re.split(r'\s.\s',myList[i])[0]] \
 		= float3(strip(re.split(r'\s.\s',myList[i])[1]).replace(' ',''))
 
 ###get the variables from the file
@@ -74,7 +74,7 @@ for k_i in inputs.keys():
 				fuzzyset[k_i] = {k_j: 0}
 		#inside
 		elif inputs[k_i] < fuz[k_i][k_j][1] + fuz[k_i][k_j][3] \
-				and inputs[k_i] > fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
+		  and inputs[k_i] > fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
 			if inputs[k_i] >= fuz[k_i][k_j][0] and inputs[k_i] <= fuz[k_i][k_j][1]:
 				print(" u("+ k_j +") = 1")
 				if k_i in fuzzyset:
@@ -83,11 +83,11 @@ for k_i in inputs.keys():
 					fuzzyset[k_i] = {k_j: 1}
 			#alpha
 			elif inputs[k_i] < fuz[k_i][k_j][0] \
-					and inputs[k_i] > fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
-				value = (inputs[k_i] 			\
-							- fuz[k_i][k_j][0] 	\
-							+ fuz[k_i][k_j][2])	\
-							/ fuz[k_i][k_j][2]
+			  and inputs[k_i] > fuz[k_i][k_j][0] - fuz[k_i][k_j][2]:
+				value = (inputs[k_i] 		\
+					  - fuz[k_i][k_j][0] 	\
+					  + fuz[k_i][k_j][2])	\
+					  / fuz[k_i][k_j][2]
 				print(" u("+ k_j +") = " + str(float3(value)))
 				if k_i in fuzzyset:
 					fuzzyset[k_i][k_j] = float3(value)
@@ -95,11 +95,11 @@ for k_i in inputs.keys():
 					fuzzyset[k_i] = {k_j: float3(value)}
 			#beta
 			elif inputs[k_i] > fuz[k_i][k_j][1] \
-					and inputs[k_i] < fuz[k_i][k_j][1] + fuz[k_i][k_j][3]:
-				value = (fuz[k_i][k_j][1] 	\
-							+ fuz[k_i][k_j][3]		\
-							- inputs[k_i])				\
-							/ fuz[k_i][k_j][3]
+			  and inputs[k_i] < fuz[k_i][k_j][1] + fuz[k_i][k_j][3]:
+				value = (fuz[k_i][k_j][1]	\
+					  + fuz[k_i][k_j][3]	\
+					  - inputs[k_i])		\
+					  / fuz[k_i][k_j][3]
 				print(" u("+ k_j +") = " + str(float3(value)))
 				if k_i in fuzzyset:
 					fuzzyset[k_i][k_j] = float3(value)
@@ -149,19 +149,19 @@ for i in fuz[action].keys():
 	if combinedRules[i] == 0:
 		continue
 	else:
-		Length = float3(					 	\
-					 (fuz[action][i][1]  	\
-					- fuz[action][i][0]  	\
-					+ fuz[action][i][2]  	\
-					+ fuz[action][i][3]))
+		Length = float3((fuz[action][i][1]  \
+			   - fuz[action][i][0]  		\
+			   + fuz[action][i][2]  		\
+			   + fuz[action][i][3]))
 
-		length = float3(
-					 (fuz[action][i][1]  	\
-					- fuz[action][i][0] 	\
-					+ fuz[action][i][2] 	\
-					+ fuz[action][i][3]) 	\
-					* (1.0 - combinedRules[i]))
+		length = float3((fuz[action][i][1] 	\
+			   - fuz[action][i][0] 			\
+			   + fuz[action][i][2] 			\
+			   + fuz[action][i][3])			\
+			   * (1.0 - combinedRules[i]))
+		
 		height = combinedRules[i]
+
 
 		print(" " + i + " area is " + str(float3(((Length+length)*height)/2)))
 		areas[i] = float3(((Length+length)*height)/2)
@@ -169,7 +169,7 @@ print(" ")
 
 print("Centres are:")
 previous = 0
-counter = 0
+counter  = 0
 
 for i in fuz[action].keys():
 	if combinedRules[i] == 0:
@@ -179,9 +179,9 @@ for i in fuz[action].keys():
 		continue
 	else:
 		if counter == 0:
-			start = fuz[action][i][0] - fuz[action][i][2]
+			start 	= fuz[action][i][0] - fuz[action][i][2]
 			counter = 1
-		centre = abs((fuz[action][i][0] + fuz[action][i][1])/2 - start)
+		centre 	 = abs((fuz[action][i][0] + fuz[action][i][1])/2 - start)
 		previous = centre
 		print( " " + i +" centre is "+ str(centre))
 		centres[i] = centre

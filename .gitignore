@@ -3,3 +3,6 @@
 
 #Ignore cache created by python 3
 __pycache__/
+
+#ignore backups
+*~

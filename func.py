@@ -4,15 +4,10 @@ from func import *
 from collections import OrderedDict, Counter
 
 
-#log     = []
-#var     = OrderedDict()
-#action 	= OrderedDict()
-#myList  = []
-#spaces  = []
-#inputs  = {}
 regexp  = re.compile(r'^\b(([a-z]+)*.([a-z]+))*[a-z]+\b(?!(\s(\d|=)))')
 
 #########################################
+
 def float3(String):
   return round(float(String),3)
   #return float(String)
